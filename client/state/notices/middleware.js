@@ -10,11 +10,6 @@ import { truncate } from 'lodash';
 import { successNotice, errorNotice } from 'state/notices/actions';
 import { getSitePost } from 'state/posts/selectors';
 import {
-	ACCOUNT_RECOVERY_FETCH_FAILED,
-	ACCOUNT_RECOVERY_PHONE_UPDATE_FAILED,
-	ACCOUNT_RECOVERY_PHONE_DELETE_FAILED,
-	ACCOUNT_RECOVERY_EMAIL_UPDATE_FAILED,
-	ACCOUNT_RECOVERY_EMAIL_DELETE_FAILED,
 	GRAVATAR_UPLOAD_REQUEST_FAILURE,
 	GRAVATAR_UPLOAD_REQUEST_SUCCESS,
 	GUIDED_TRANSFER_HOST_DETAILS_SAVE_SUCCESS,
@@ -26,17 +21,9 @@ import {
 	SITE_FRONT_PAGE_SET_FAILURE
 } from 'state/action-types';
 
-/**
- * Utility
- */
+import { dispatchSuccess, dispatchError } from './utils';
 
-export function dispatchSuccess( message ) {
-	return ( dispatch ) => dispatch( successNotice( message ) );
-}
-
-export function dispatchError( message ) {
-	return ( dispatch ) => dispatch( errorNotice( message ) );
-}
+import accountRecoveryNoticeHandlers from './account-recovery';
 
 /**
  * Handlers
@@ -94,11 +81,8 @@ export function onPostSaveSuccess( dispatch, action ) {
  */
 
 export const handlers = {
-	[ ACCOUNT_RECOVERY_FETCH_FAILED ]: dispatchError( translate( 'An error occurred while fetching for your account recovery settings.' ) ),
-	[ ACCOUNT_RECOVERY_PHONE_UPDATE_FAILED ]: dispatchError( translate( 'An error occurred while updating your account recovery phone number.' ) ),
-	[ ACCOUNT_RECOVERY_PHONE_DELETE_FAILED ]: dispatchError( translate( 'An error occurred while deleting your account recovery phone number.' ) ),
-	[ ACCOUNT_RECOVERY_EMAIL_UPDATE_FAILED ]: dispatchError( translate( 'An error occurred while updating your account recovery email.' ) ),
-	[ ACCOUNT_RECOVERY_EMAIL_DELETE_FAILED ]: dispatchError( translate( 'An error occurred while deleting your account recovery email.' ) ),
+	...accountRecoveryNoticeHandlers,
+
 	[ GRAVATAR_UPLOAD_REQUEST_FAILURE ]: dispatchError( translate( 'New Gravatar was not saved.' ) ),
 	[ GRAVATAR_UPLOAD_REQUEST_SUCCESS ]: dispatchSuccess( translate( 'New Gravatar uploaded successfully!' ) ),
 	[ POST_DELETE_FAILURE ]: onPostDeleteFailure,
@@ -107,7 +91,7 @@ export const handlers = {
 	[ POST_RESTORE_SUCCESS ]: dispatchSuccess( translate( 'Post successfully restored' ) ),
 	[ POST_SAVE_SUCCESS ]: onPostSaveSuccess,
 	[ GUIDED_TRANSFER_HOST_DETAILS_SAVE_SUCCESS ]: dispatchSuccess( translate( 'Thanks for confirming those details!' ) ),
-	[ SITE_FRONT_PAGE_SET_FAILURE ]: dispatchError( translate( 'An error occurred while setting the homepage' ) )
+	[ SITE_FRONT_PAGE_SET_FAILURE ]: dispatchError( translate( 'An error occurred while setting the homepage' ) ),
 };
 
 /**
