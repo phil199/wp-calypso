@@ -11,6 +11,10 @@ import { successNotice, errorNotice } from 'state/notices/actions';
 import { getSitePost } from 'state/posts/selectors';
 import {
 	ACCOUNT_RECOVERY_FETCH_FAILED,
+	ACCOUNT_RECOVERY_PHONE_UPDATE_FAILED,
+	ACCOUNT_RECOVERY_PHONE_DELETE_FAILED,
+	ACCOUNT_RECOVERY_EMAIL_UPDATE_FAILED,
+	ACCOUNT_RECOVERY_EMAIL_DELETE_FAILED,
 	GRAVATAR_UPLOAD_REQUEST_FAILURE,
 	GRAVATAR_UPLOAD_REQUEST_SUCCESS,
 	GUIDED_TRANSFER_HOST_DETAILS_SAVE_SUCCESS,
@@ -91,6 +95,10 @@ export function onPostSaveSuccess( dispatch, action ) {
 
 export const handlers = {
 	[ ACCOUNT_RECOVERY_FETCH_FAILED ]: dispatchError( translate( 'An error occurred while fetching for your account recovery settings.' ) ),
+	[ ACCOUNT_RECOVERY_PHONE_UPDATE_FAILED ]: dispatchError( translate( 'An error occurred while updating your account recovery phone number.' ) ),
+	[ ACCOUNT_RECOVERY_PHONE_DELETE_FAILED ]: dispatchError( translate( 'An error occurred while deleting your account recovery phone number.' ) ),
+	[ ACCOUNT_RECOVERY_EMAIL_UPDATE_FAILED ]: dispatchError( translate( 'An error occurred while updating your account recovery email.' ) ),
+	[ ACCOUNT_RECOVERY_EMAIL_DELETE_FAILED ]: dispatchError( translate( 'An error occurred while deleting your account recovery email.' ) ),
 	[ GRAVATAR_UPLOAD_REQUEST_FAILURE ]: dispatchError( translate( 'New Gravatar was not saved.' ) ),
 	[ GRAVATAR_UPLOAD_REQUEST_SUCCESS ]: dispatchSuccess( translate( 'New Gravatar uploaded successfully!' ) ),
 	[ POST_DELETE_FAILURE ]: onPostDeleteFailure,
