@@ -34,10 +34,8 @@ import themesUI from './themes-ui/reducer';
  * @return {Object}        Updated state
  */
 export const items = createReducer( {}, {
-	[ THEMES_RECEIVE ]: ( state, action ) => {
-		const { siteId } = action;
-
-		const fetchedThemes = keyBy( action.themes, 'id' );
+	[ THEMES_RECEIVE ]: ( state, { themes, siteId } ) => {
+		const fetchedThemes = keyBy( themes, 'id' );
 		return { ...state, [ siteId ]: { ...( state[ siteId ] ), ...fetchedThemes } };
 	}
 }, itemsSchema );
