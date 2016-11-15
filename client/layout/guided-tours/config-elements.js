@@ -437,7 +437,7 @@ export class ButtonRow extends Component {
 
 	render() {
 		return (
-			<div className="{ this.props.single === true ? 'guided-tours__single-button-row' : 'guided-tours__choice-button-row' }">
+			<div className={ this.props.single === true ? 'guided-tours__single-button-row' : 'guided-tours__choice-button-row' }>
 				{ this.props.children }
 			</div>
 		);
