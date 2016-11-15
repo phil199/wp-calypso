@@ -24,6 +24,7 @@ import {
 } from './utils';
 import { createReducer, isValidStateWithSchema } from 'state/utils';
 import { itemsSchema, queriesSchema } from './schema';
+import currentTheme from './current-theme/reducer';
 import themesUI from './themes-ui/reducer';
 
 /**
@@ -166,5 +167,6 @@ export default combineReducers( {
 	siteRequests,
 	queryRequests,
 	queries,
+	currentTheme,
 	themesUI
 } );
