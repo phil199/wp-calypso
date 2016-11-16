@@ -127,7 +127,7 @@ export function requestTheme( themeId, siteId, isJetpack = false ) {
 		} );
 
 		return wpcom.undocumented().themeDetails( themeId, siteIdToQuery ).then( ( theme ) => {
-			dispatch( receiveTheme( theme ) );
+			dispatch( receiveTheme( theme, siteIdToStore ) );
 			dispatch( {
 				type: THEME_REQUEST_SUCCESS,
 				siteId: siteIdToStore,

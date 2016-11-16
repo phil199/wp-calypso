@@ -40,11 +40,12 @@ describe( 'actions', () => {
 	describe( '#receiveTheme()', () => {
 		it( 'should return an action object', () => {
 			const theme = { id: 'twentysixteen', name: 'Twenty Sixteen' };
-			const action = receiveTheme( theme );
+			const action = receiveTheme( theme, 77203074 );
 
 			expect( action ).to.eql( {
 				type: THEMES_RECEIVE,
-				themes: [ theme ]
+				themes: [ theme ],
+				siteId: 77203074
 			} );
 		} );
 	} );
@@ -52,11 +53,12 @@ describe( 'actions', () => {
 	describe( '#receiveThemes()', () => {
 		it( 'should return an action object', () => {
 			const themes = [ { id: 'twentysixteen', name: 'Twenty Sixteen' } ];
-			const action = receiveThemes( themes );
+			const action = receiveThemes( themes, 77203074 );
 
 			expect( action ).to.eql( {
 				type: THEMES_RECEIVE,
-				themes
+				themes,
+				siteId: 77203074
 			} );
 		} );
 	} );
@@ -118,12 +120,13 @@ describe( 'actions', () => {
 						themes: [
 							{ ID: 'twentysixteen', name: 'Twenty Sixteen' },
 							{ ID: 'mood', name: 'Mood' }
-						]
+						],
+						siteId: 'wpcom'
 					} );
 				} );
 			} );
 
-			it( 'should dispatch themes themes request success action when request completes', () => {
+			it( 'should dispatch themes request success action when request completes', () => {
 				return requestThemes( 2916284 )( spy ).then( () => {
 					expect( spy ).to.have.been.calledWith( {
 						type: THEMES_REQUEST_SUCCESS,
@@ -171,12 +174,13 @@ describe( 'actions', () => {
 						themes: [
 							{ ID: 'twentyfifteen', name: 'Twenty Fifteen' },
 							{ ID: 'twentysixteen', name: 'Twenty Sixteen' },
-						]
+						],
+						siteId: 77203074
 					} );
 				} );
 			} );
 
-			it( 'should dispatch themes themes request success action when request completes', () => {
+			it( 'should dispatch themes request success action when request completes', () => {
 				return requestThemes( 77203074, true )( spy ).then( () => {
 					expect( spy ).to.have.been.calledWith( {
 						type: THEMES_REQUEST_SUCCESS,
@@ -248,7 +252,8 @@ describe( 'actions', () => {
 						type: THEMES_RECEIVE,
 						themes: [
 							sinon.match( { id: 'twentysixteen', title: 'Twenty Sixteen' } )
-						]
+						],
+						siteId: 'wpcom'
 					} );
 				} );
 			} );
