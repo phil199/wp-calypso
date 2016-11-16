@@ -4,6 +4,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import config from 'config';
 import debugModule from 'debug';
 import page from 'page';
 import { uniq, upperFirst } from 'lodash';
@@ -29,6 +30,7 @@ import pluginsAccessControl from 'my-sites/plugins/access-control';
 import EmptyContent from 'components/empty-content';
 import FeatureExample from 'components/feature-example';
 import DocumentHead from 'components/data/document-head';
+import WpcomPluginsList from 'my-sites/plugins-wpcom/plugins-list';
 
 /**
  * Module variables
@@ -295,7 +297,24 @@ const SinglePlugin = React.createClass( {
 	render() {
 		const selectedSite = this.props.sites.getSelectedSite();
 
-		if ( this.state.accessError && ( ! selectedSite || selectedSite.jetpack ) ) {
+		if (
+			selectedSite &&
+			! selectedSite.jetpack &&
+			! config.isEnabled( 'automated-transfer' )
+		) {
+			return (
+				<MainComponent>
+					{ this.renderDocumentHead() }
+					<SidebarNavigation />
+					<WpcomPluginsList />
+				</MainComponent>
+			);
+		}
+
+		if (
+			this.state.accessError &&
+			( ! selectedSite || selectedSite.jetpack )
+		) {
 			return (
 				<MainComponent>
 					{ this.renderDocumentHead() }

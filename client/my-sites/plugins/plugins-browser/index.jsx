@@ -2,6 +2,7 @@
  * External dependencies
  */
 import React from 'react';
+import config from 'config';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -320,7 +321,10 @@ const PluginsBrowser = React.createClass( {
 					! selectedSite.canManage()
 				)
 			) &&
-			( selectedSite && selectedSite.jetpack )
+			(
+				! config.isEnabled( 'automated-transfer' ) ||
+				( selectedSite && selectedSite.jetpack )
+			)
 		) {
 			return this.renderAccessError( selectedSite );
 		}
