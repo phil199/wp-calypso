@@ -14,7 +14,6 @@ import startsWith from 'lodash/startsWith';
 import page from 'page';
 import qs from 'qs';
 import { connect } from 'react-redux';
-import { endsWith } from 'lodash';
 
 /**
  * Internal dependencies
@@ -198,6 +197,15 @@ const RegisterDomainStep = React.createClass( {
 		return (
 			<div className="register-domain-step">
 				{ this.searchForm() }
+				{
+					<Notice
+						text={ this.translate(
+							"New! {{strong}}.blog{{/strong}} domains are now available for registration.",
+							{ components: { strong: <strong /> } }
+						) }
+						status={ `is-info` }
+						showDismiss={ false } />
+				}
 				{ this.notices() }
 				{ this.content() }
 				{ this.queryDomainsSuggestions() }
@@ -310,12 +318,6 @@ const RegisterDomainStep = React.createClass( {
 		async.parallel(
 			[
 				callback => {
-					if ( endsWith( domain, '.blog' ) ) {
-						const error = { code: 'dotblog_domain' };
-						this.showValidationErrorMessage( domain, error );
-						return callback();
-					}
-
 					if ( ! domain.match( /^([a-z0-9]([a-z0-9-]*[a-z0-9])?\.)*[a-z0-9]([a-z0-9-]*[a-z0-9])?\.[a-z]{2,63}$/i ) ) {
 						return callback();
 					}
@@ -527,17 +529,6 @@ const RegisterDomainStep = React.createClass( {
 			severity = 'error';
 
 		switch ( error.code ) {
-			case 'dotblog_domain':
-				message = this.translate(
-					'Coming soon! {{strong}}.blog{{/strong}} domains will be available on {{strong}}November 21st{{/strong}}.',
-					{
-						components: {
-							strong: <strong />
-						}
-					}
-				);
-				severity = 'info';
-				break;
 			case 'available_but_not_registrable':
 				const tldIndex = domain.lastIndexOf( '.' );
 				if ( tldIndex !== -1 ) {
