@@ -19,7 +19,7 @@ import * as upgradesActions from 'lib/upgrades/actions';
 class Office365 extends Component {
 	constructor( props ) {
 		super( props );
-		this.state = { token: '' };
+		this.state = { token: '', submitting: false };
 	}
 
 	onChange = ( event ) => {
@@ -29,11 +29,13 @@ class Office365 extends Component {
 
 	onAddDnsRecords = ( event ) => {
 		event.preventDefault();
+		this.setState( { submitting: true } );
 		upgradesActions.addDnsOffice( this.props.selectedDomainName, this.state.token, ( error ) => {
 			if ( error ) {
 				notices.error( error.message || this.props.translate( 'The DNS record has not been added.' ) );
+				this.setState( { submitting: false } );
 			} else {
-				notices.success( this.props.translate( 'The DNS record has been added.' ), {
+				notices.success( this.props.translate( 'The DNS records have been added.' ), {
 					duration: 5000
 				} );
 			}
@@ -59,7 +61,7 @@ class Office365 extends Component {
 
 					<FormFooter>
 						<FormButton
-							disabled={ ! isDataValid }
+							disabled={ ! isDataValid || this.state.submitting }
 							onClick={ this.onAddDnsRecords }>
 							{ this.props.translate( 'Set up Office 365' ) }
 						</FormButton>
