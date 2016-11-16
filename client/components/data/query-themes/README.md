@@ -10,7 +10,7 @@ Render the component, passing `siteId` and `query`. It does not accept any child
 ```jsx
 import React from 'react';
 import QueryThemes from 'components/data/query-themes';
-import MyThemesListItem from './list-item';
+import Theme from 'components/theme';
 
 export default function MyThemesList( { themes } ) {
 	return (
@@ -20,7 +20,7 @@ export default function MyThemesList( { themes } ) {
 				query={ { search: 'Automattic' } } />
 			{ themes.map( ( theme ) => {
 				return (
-					<MyThemesListItem
+					<Theme
 						key={ theme.id }
 						theme={ theme } />
 				);
