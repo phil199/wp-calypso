@@ -3,7 +3,7 @@ var React = require( 'react' ),
 	includes = require( 'lodash/includes' );
 
 var DocumentHead = require( 'components/data/document-head' ),
-	FeedHeader = require( 'reader/feed-header' ),
+	FeedHeader = require( 'blocks/reader-feed-header' ),
 	FeedFeatured = require( './featured' ),
 	EmptyContent = require( './empty' ),
 	Stream = require( 'reader/stream' ),
