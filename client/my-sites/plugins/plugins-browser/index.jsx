@@ -311,9 +311,17 @@ const PluginsBrowser = React.createClass( {
 
 	render() {
 		const selectedSite = this.props.sites.getSelectedSite();
-		if ( this.state.accessError ||
-				( selectedSite && selectedSite.jetpack && ! selectedSite.canManage() )
-			) {
+		if (
+			(
+				this.state.accessError ||
+				(
+					selectedSite &&
+					selectedSite.jetpack &&
+					! selectedSite.canManage()
+				)
+			) &&
+			( selectedSite && selectedSite.jetpack )
+		) {
 			return this.renderAccessError( selectedSite );
 		}
 

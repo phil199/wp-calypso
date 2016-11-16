@@ -6,8 +6,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import debugModule from 'debug';
 import page from 'page';
-import uniq from 'lodash/uniq';
-import upperFirst from 'lodash/upperFirst';
+import { uniq, upperFirst } from 'lodash';
 
 /**
  * Internal dependencies
@@ -30,7 +29,6 @@ import pluginsAccessControl from 'my-sites/plugins/access-control';
 import EmptyContent from 'components/empty-content';
 import FeatureExample from 'components/feature-example';
 import DocumentHead from 'components/data/document-head';
-import WpcomPluginsList from 'my-sites/plugins-wpcom/plugins-list';
 
 /**
  * Module variables
@@ -38,9 +36,6 @@ import WpcomPluginsList from 'my-sites/plugins-wpcom/plugins-list';
 const debug = debugModule( 'calypso:my-sites:plugin' );
 
 const SinglePlugin = React.createClass( {
-
-	displayName: 'SinglePlugin',
-
 	_DEFAULT_PLUGINS_BASE_PATH: 'http://wordpress.org/plugins/',
 
 	_currentPageTitle: null,
@@ -79,18 +74,7 @@ const SinglePlugin = React.createClass( {
 	},
 
 	getSitesPlugin( nextProps ) {
-		const props = nextProps || this.props,
-			selectedSite = this.props.sites.getSelectedSite();
-
-		// .com sites can't install non .com plugins, if that's the case we don't retrieve any data from the store
-		if ( selectedSite && ! selectedSite.jetpack ) {
-			return {
-				accessError: false,
-				sites: [],
-				notInstalledSites: [],
-				plugin: null
-			};
-		}
+		const props = nextProps || this.props;
 
 		const sites = uniq( props.sites.getSelectedOrAllWithPlugins() ),
 			sitePlugin = PluginsStore.getPlugin( sites, props.pluginSlug );
@@ -311,17 +295,7 @@ const SinglePlugin = React.createClass( {
 	render() {
 		const selectedSite = this.props.sites.getSelectedSite();
 
-		if ( selectedSite && ! selectedSite.jetpack ) {
-			return (
-				<MainComponent>
-					{ this.renderDocumentHead() }
-					<SidebarNavigation />
-					<WpcomPluginsList />
-				</MainComponent>
-			);
-		}
-
-		if ( this.state.accessError ) {
+		if ( this.state.accessError && ( ! selectedSite || selectedSite.jetpack ) ) {
 			return (
 				<MainComponent>
 					{ this.renderDocumentHead() }
