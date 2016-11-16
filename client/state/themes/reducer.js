@@ -50,7 +50,7 @@ export const items = createReducer( {}, {
  * @param  {Object} action Action payload
  * @return {Object}        Updated state
  */
-export function siteRequests( state = {}, action ) {
+export function themeRequests( state = {}, action ) {
 	switch ( action.type ) {
 		case THEME_REQUEST:
 		case THEME_REQUEST_SUCCESS:
@@ -153,7 +153,7 @@ export const queries = ( () => {
 
 export default combineReducers( {
 	items,
-	siteRequests,
+	themeRequests,
 	queryRequests,
 	queries,
 	currentTheme,

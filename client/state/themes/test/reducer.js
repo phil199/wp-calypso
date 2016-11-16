@@ -23,7 +23,7 @@ import reducer, {
 	items,
 	queryRequests,
 	queries,
-	siteRequests
+	themeRequests
 } from '../reducer';
 import ThemeQueryManager from 'lib/query-manager/theme';
 
@@ -70,7 +70,7 @@ describe( 'reducer', () => {
 	it( 'should include expected keys in return value', () => {
 		expect( reducer( undefined, {} ) ).to.have.keys( [
 			'items',
-			'siteRequests',
+			'themeRequests',
 			'queryRequests',
 			'queries',
 			'themesUI'
@@ -420,15 +420,15 @@ describe( 'reducer', () => {
 		} );
 	} );
 
-	describe( '#siteRequests()', () => {
+	describe( '#themeRequests()', () => {
 		it( 'should default to an empty object', () => {
-			const state = siteRequests( undefined, {} );
+			const state = themeRequests( undefined, {} );
 
 			expect( state ).to.eql( {} );
 		} );
 
 		it( 'should map site ID, theme ID to true value if request in progress', () => {
-			const state = siteRequests( deepFreeze( {} ), {
+			const state = themeRequests( deepFreeze( {} ), {
 				type: THEME_REQUEST,
 				siteId: 2916284,
 				themeId: 841
@@ -442,7 +442,7 @@ describe( 'reducer', () => {
 		} );
 
 		it( 'should accumulate mappings', () => {
-			const state = siteRequests( deepFreeze( {
+			const state = themeRequests( deepFreeze( {
 				2916284: {
 					841: true
 				}
@@ -461,7 +461,7 @@ describe( 'reducer', () => {
 		} );
 
 		it( 'should map site ID, theme ID to false value if request finishes successfully', () => {
-			const state = siteRequests( deepFreeze( {
+			const state = themeRequests( deepFreeze( {
 				2916284: {
 					841: true
 				}
@@ -479,7 +479,7 @@ describe( 'reducer', () => {
 		} );
 
 		it( 'should map site ID, theme ID to false value if request finishes with failure', () => {
-			const state = siteRequests( deepFreeze( {
+			const state = themeRequests( deepFreeze( {
 				2916284: {
 					841: true
 				}
@@ -497,7 +497,7 @@ describe( 'reducer', () => {
 		} );
 
 		it( 'never persists state', () => {
-			const state = siteRequests( deepFreeze( {
+			const state = themeRequests( deepFreeze( {
 				2916284: {
 					841: true
 				}
@@ -509,7 +509,7 @@ describe( 'reducer', () => {
 		} );
 
 		it( 'never loads persisted state', () => {
-			const state = siteRequests( deepFreeze( {
+			const state = themeRequests( deepFreeze( {
 				2916284: {
 					841: true
 				}

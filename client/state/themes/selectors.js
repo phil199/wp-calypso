@@ -172,11 +172,11 @@ export function isThemesLastPageForQuery( state, siteId, query = {} ) {
  * @return {Boolean}        Whether request is in progress
  */
 export function isRequestingSiteTheme( state, siteId, themeId ) {
-	if ( ! state.themes.siteRequests[ siteId ] ) {
+	if ( ! state.themes.themeRequests[ siteId ] ) {
 		return false;
 	}
 
-	return !! state.themes.siteRequests[ siteId ][ themeId ];
+	return !! state.themes.themeRequests[ siteId ][ themeId ];
 }
 
 /**
