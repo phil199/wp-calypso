@@ -4,20 +4,23 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import page from 'page';
-import compact from 'lodash/compact';
 
 /**
  * Internal dependencies
  */
 import { trackClick } from './helpers';
-import ThemesData from 'components/data/themes-list-fetcher';
+import QueryThemes from 'components/data/query-themes';
 import ThemesList from 'components/themes-list';
 import StickyPanel from 'components/sticky-panel';
 import analytics from 'lib/analytics';
 import buildUrl from 'lib/mixins/url-search/build-url';
 import { getSiteSlug } from 'state/sites/selectors';
 import { isActiveTheme } from 'state/themes/current-theme/selectors';
-import { isThemePurchased } from 'state/themes/selectors';
+import {
+	getThemesForQuery,
+	isThemesLastPageForQuery,
+	isThemePurchased
+} from 'state/themes/selectors';
 import {
 	getFilter,
 	getSortedFilterTerms,
@@ -74,13 +77,13 @@ const ThemesSelection = React.createClass( {
 	},
 
 	recordSearchResultsClick( theme, resultsRank ) {
-		const { queryParams, themesList } = this.props;
+		//const { queryParams, themesList } = this.props;
 		analytics.tracks.recordEvent( 'calypso_themeshowcase_theme_click', {
-			search_term: queryParams.search,
+			//search_term: queryParams.search,
 			theme: theme,
 			results_rank: resultsRank + 1,
-			results: themesList,
-			page_number: queryParams.page
+			//results: themesList,
+			//page_number: queryParams.page
 		} );
 	},
 
@@ -119,13 +122,26 @@ const ThemesSelection = React.createClass( {
 		this.props.onScreenshotClick && this.props.onScreenshotClick( theme );
 	},
 
-	addVerticalToFilters() {
-		const { vertical, filter } = this.props;
-		return compact( [ filter, vertical ] ).join( ',' );
+//	fetchNextPage() {
+		//this.setState( { page: this.state.page + 1 } );
+//	},
+
+	fetchNextPage( options ) {
+		if ( this.props.lastPage ) {
+			return;
+		}
+
+		if ( options.triggeredByScroll ) {
+			this.trackScrollPage();
+		}
+
+		//this.setState( { page: this.state.page + 1 } );
+		//this.queryThemes( this.props );
+		//this.props.incrementPage();
 	},
 
 	render() {
-		const { selectedSite: site } = this.props;
+		const { selectedSite: site, siteId, query } = this.props;
 
 		return (
 			<div className="themes__selection">
@@ -137,22 +153,18 @@ const ThemesSelection = React.createClass( {
 						tier={ this.props.tier }
 						select={ this.onTierSelect } />
 				</StickyPanel>
-				<ThemesData
-					site={ site }
-					isMultisite={ ! this.props.siteId } // Not the same as `! site` !
-					search={ this.props.search }
-					tier={ this.props.tier }
-					filter={ this.addVerticalToFilters() }
-					onRealScroll={ this.trackScrollPage }
-					onLastPage={ this.trackLastPage } >
-					<ThemesList getButtonOptions={ this.props.getOptions }
-						onMoreButtonClick={ this.onMoreButtonClick }
-						onScreenshotClick={ this.onScreenshotClick }
-						getScreenshotUrl={ this.props.getScreenshotUrl }
-						getActionLabel={ this.props.getActionLabel }
-						isActive={ this.props.isActiveTheme }
-						isPurchased={ this.props.isThemePurchased } />
-				</ThemesData>
+				<QueryThemes
+					query={ query }
+					siteId={ siteId } />
+				<ThemesList themes={ this.props.themes }
+					fetchNextPage={ this.fetchNextPage }
+					getButtonOptions={ this.props.getOptions }
+					onMoreButtonClick={ this.onMoreButtonClick }
+					onScreenshotClick={ this.onScreenshotClick }
+					getScreenshotUrl={ this.props.getScreenshotUrl }
+					getActionLabel={ this.props.getActionLabel }
+					isActive={ this.props.isActiveTheme }
+					isPurchased={ this.props.isThemePurchased } />
 			</div>
 		);
 	},
@@ -160,13 +172,15 @@ const ThemesSelection = React.createClass( {
 } );
 
 export default connect(
-	( state, { siteId } ) => ( {
+	( state, { query, siteId } ) => ( {
 		siteSlug: getSiteSlug( state, siteId ),
+		themes: getThemesForQuery( state, siteId || 'wpcom', query ) || [],
+		isLastPage: isThemesLastPageForQuery( state, siteId || 'wpcom', query ),
 		isActiveTheme: themeId => isActiveTheme( state, themeId, siteId ),
 		// Note: This component assumes that purchase data is already present in the state tree
 		// (used by the isThemePurchased selector). At the time of implementation there's no caching
 		// in <QuerySitePurchases /> and a parent component is already rendering it. So to avoid
 		// redundant AJAX requests, we're not rendering the query component locally.
-		isThemePurchased: themeId => isThemePurchased( state, themeId, siteId )
+		isThemePurchased: themeId => isThemePurchased( state, themeId, siteId ),
 	} )
 )( ThemesSelection );

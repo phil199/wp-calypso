@@ -2,9 +2,8 @@
  * External dependencies
  */
 import React, { PropTypes } from 'react';
-import { connect } from 'react-redux';
 import { localize } from 'i18n-calypso';
-import pickBy from 'lodash/pickBy';
+import { compact, pickBy } from 'lodash';
 
 /**
  * Internal dependencies
@@ -13,9 +12,9 @@ import Main from 'components/main';
 import ThemePreview from './theme-preview';
 import ThemesSelection from './themes-selection';
 import PageViewTracker from 'lib/analytics/page-view-tracker';
-import { getQueryParams, getThemesList } from 'state/themes/themes-list/selectors';
 import { addTracking } from './helpers';
 import DocumentHead from 'components/data/document-head';
+import config from 'config';
 
 const themesMeta = {
 	'': {
@@ -62,6 +61,7 @@ const ThemeShowcase = React.createClass( {
 
 	getInitialState() {
 		return {
+			page: 0,
 			showPreview: false,
 			previewingTheme: null,
 		};
@@ -103,8 +103,18 @@ const ThemeShowcase = React.createClass( {
 		return primaryOption;
 	},
 
+	addVerticalToFilters() {
+		const { vertical, filter } = this.props;
+		return compact( [ filter, vertical ] ).join( ',' );
+	},
+
+	incrementPage() {
+		this.setState( { page: this.state.page + 1 } );
+	},
+
 	render() {
-		const { options, getScreenshotOption, secondaryOption, tier } = this.props;
+		const { options, getScreenshotOption, secondaryOption, search } = this.props;
+		const tier = config.isEnabled( 'upgrades/premium-themes' ) ? this.props.tier : 'free';
 		const primaryOption = this.getPrimaryOption();
 
 		// If a preview action is passed, use that. Otherwise, use our own.
@@ -117,6 +127,14 @@ const ThemeShowcase = React.createClass( {
 			{ property: 'og:url', content: themesMeta[ tier ].canonicalUrl },
 			{ property: 'og:type', content: 'website' }
 		];
+
+		const query = {
+			search,
+			tier,
+			filter: this.addVerticalToFilters(),
+			page: this.state.page,
+			number: 20
+		};
 
 		// FIXME: Logged-in title should only be 'Themes'
 		return (
@@ -136,7 +154,7 @@ const ThemeShowcase = React.createClass( {
 						onSecondaryButtonClick={ this.onSecondaryPreviewButtonClick }
 					/>
 				}
-				<ThemesSelection search={ this.props.search }
+				<ThemesSelection query={ query }
 					siteId={ this.props.siteId }
 					selectedSite={ this.props.selectedSite }
 					getScreenshotUrl={ function( theme ) {
@@ -163,16 +181,10 @@ const ThemeShowcase = React.createClass( {
 					tier={ this.props.tier }
 					filter={ this.props.filter }
 					vertical={ this.props.vertical }
-					queryParams={ this.props.queryParams }
-					themesList={ this.props.themesList } />
+					incrementPage={ this.incrementPage } />
 			</Main>
 		);
 	}
 } );
 
-export default connect(
-	state => ( {
-		queryParams: getQueryParams( state ),
-		themesList: getThemesList( state ),
-	} )
-)( localize( ThemeShowcase ) );
+export default localize( ThemeShowcase );
