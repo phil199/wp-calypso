@@ -73,6 +73,7 @@ describe( 'reducer', () => {
 			'themeRequests',
 			'queryRequests',
 			'queries',
+			'currentTheme',
 			'themesUI'
 		] );
 	} );
@@ -328,10 +329,10 @@ describe( 'reducer', () => {
 			const original = deepFreeze( queries( deepFreeze( {} ), {
 				type: THEMES_REQUEST_SUCCESS,
 				siteId: 2916284,
-				query: { search: 'Hello' },
+				query: { search: 'Sixteen' },
 				found: 1,
 				themes: [
-					{ ID: 841, site_ID: 2916284, global_ID: '3d097cb7c5473c169bba0eb8e3c6cb64', title: 'Hello World' }
+					twentysixteen
 				]
 			} ) );
 
@@ -341,22 +342,17 @@ describe( 'reducer', () => {
 				2916284: {
 					data: {
 						items: {
-							841: {
-								ID: 841,
-								site_ID: 2916284,
-								global_ID: '3d097cb7c5473c169bba0eb8e3c6cb64',
-								title: 'Hello World'
-							}
+							twentysixteen
 						},
 						queries: {
-							'[["search","Hello"]]': {
-								itemKeys: [ 841 ],
+							'[["search","Sixteen"]]': {
+								itemKeys: [ 'twentysixteen' ],
 								found: 1
 							}
 						}
 					},
 					options: {
-						itemKey: 'ID'
+						itemKey: 'id'
 					}
 				}
 			} );
@@ -367,22 +363,17 @@ describe( 'reducer', () => {
 				2916284: {
 					data: {
 						items: {
-							841: {
-								ID: 841,
-								site_ID: 2916284,
-								global_ID: '3d097cb7c5473c169bba0eb8e3c6cb64',
-								title: 'Hello World'
-							}
+							twentysixteen
 						},
 						queries: {
-							'[["search","Hello"]]': {
-								itemKeys: [ 841 ],
+							'[["search","Sixteen"]]': {
+								itemKeys: [ 'twentysixteen' ],
 								found: 1
 							}
 						}
 					},
 					options: {
-						itemKey: 'ID'
+						itemKey: 'id'
 					}
 				}
 			} );
@@ -392,20 +383,15 @@ describe( 'reducer', () => {
 			expect( state ).to.eql( {
 				2916284: new ThemeQueryManager( {
 					items: {
-						841: {
-							ID: 841,
-							global_ID: '3d097cb7c5473c169bba0eb8e3c6cb64',
-							site_ID: 2916284,
-							title: 'Hello World'
-						}
+						twentysixteen
 					},
 					queries: {
-						'[["search","Hello"]]': {
+						'[["search","Sixteen"]]': {
 							found: 1,
-							itemKeys: [ 841 ]
+							itemKeys: [ 'twentysixteen' ]
 						}
 					}
-				} )
+				}, { itemKey: 'id' } )
 			} );
 		} );
 
