@@ -2,7 +2,7 @@
  * External dependencies
  */
 import { combineReducers } from 'redux';
-import { keyBy, reduce, mapValues } from 'lodash';
+import { keyBy, mapValues } from 'lodash';
 
 /**
  * Internal dependencies
@@ -114,7 +114,7 @@ export const queries = ( () => {
 
 			return {
 				...state,
-				[ siteId ]: ( new ThemeQueryManager() )[ method ]( ...args )
+				[ siteId ]: ( new ThemeQueryManager( null, { itemKey: 'id' } ) )[ method ]( ...args )
 			};
 		}
 
@@ -133,19 +133,8 @@ export const queries = ( () => {
 		[ THEMES_REQUEST_SUCCESS ]: ( state, { siteId, query, themes, found } ) => {
 			return applyToManager( state, siteId, 'receive', true, themes, { query, found } );
 		},
-		[ THEMES_RECEIVE ]: ( state, { themes } ) => {
-			const themesBySiteId = reduce( themes, ( memo, theme ) => {
-				return Object.assign( memo, {
-					[ theme.site_ID ]: [
-						...( memo[ theme.site_ID ] || [] ),
-						theme
-					]
-				} );
-			}, {} );
-
-			return reduce( themesBySiteId, ( memo, siteThemes, siteId ) => {
-				return applyToManager( memo, siteId, 'receive', true, siteThemes );
-			}, state );
+		[ THEMES_RECEIVE ]: ( state, { siteId, themes } ) => {
+			return applyToManager( state, siteId, 'receive', true, themes );
 		},
 		[ SERIALIZE ]: ( state ) => {
 			return mapValues( state, ( { data, options } ) => ( { data, options } ) );
