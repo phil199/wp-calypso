@@ -47,7 +47,7 @@ class QueryThemes extends Component {
 
 export default connect(
 	( state, { query, siteId } ) => ( {
-		isJetpackSite: isJetpackSite( state, siteId ),
+		isJetpackSite: !! isJetpackSite( state, siteId ),
 		isRequesting: isRequestingThemesForQuery( state, siteId || 'wpcom', query ),
 	} ),
 	{ requestThemes }
